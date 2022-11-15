@@ -14,13 +14,13 @@ from sklearn.metrics import roc_curve, auc
 from matplotlib import pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense
-import logging
+import logging_test
 
 def calculate_k(X_train, X_test, y_train, y_test):
     """
     Training our model on all possible K values (odd) from 3 to 10  
     """
-    logO= logging.getSQALogger()
+    logO= logging_test.getSQALogger()
     kVals = np.arange(3,10,2)
     accuracies = []
     for k in kVals:
@@ -49,7 +49,7 @@ def prepare_data():
 #     print(mnist.data.shape)
 #     X = mnist.data 
 #     y = mnist.target
-    logO= logging.getSQALogger()
+    logO= logging_test.getSQALogger()
     se_data = pd.read_csv('data//IST_MIR.csv') 
     logO.debug('{}*{}*{}'.format('attack_model', 'prepare_data', str(se_data.shape))) 
     print(se_data.shape)
@@ -69,7 +69,7 @@ def perform_inference(X_train, X_test, y_train, y_test, model_name):
     """
     Performing inference of the trained model on the testing set:
     """
-    logO= logging.getSQALogger()
+    logO= logging_test.getSQALogger()
     if (model_name == 'KNeighborsClassifier') : 
         k = calculate_k(X_train, X_test, y_train, y_test)
         model = KNeighborsClassifier(n_neighbors = k)
