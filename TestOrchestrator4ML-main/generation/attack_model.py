@@ -14,17 +14,20 @@ from sklearn.metrics import roc_curve, auc
 from matplotlib import pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense
+import logging
 
 def calculate_k(X_train, X_test, y_train, y_test):
     """
     Training our model on all possible K values (odd) from 3 to 10  
     """
+    logO= logging.getSQALogger()
     kVals = np.arange(3,10,2)
     accuracies = []
     for k in kVals:
         model = KNeighborsClassifier(n_neighbors = k)
         model.fit(X_train, y_train)
         pred = model.predict(X_test)
+        logO.debug('{}*{}*{}*{}'.format('attack_model', 'calculate_k', str(k),str(kVals))) 
         acc = accuracy_score(y_test, pred)
         accuracies.append(acc)
     max_index = accuracies.index(max(accuracies))
@@ -46,7 +49,9 @@ def prepare_data():
 #     print(mnist.data.shape)
 #     X = mnist.data 
 #     y = mnist.target
+    logO= logging.getSQALogger()
     se_data = pd.read_csv('data//IST_MIR.csv') 
+    logO.debug('{}*{}*{}'.format('attack_model', 'prepare_data', str(se_data.shape))) 
     print(se_data.shape)
     X = se_data.iloc[:, 2:14]
     y = se_data['defect_status']
@@ -64,7 +69,7 @@ def perform_inference(X_train, X_test, y_train, y_test, model_name):
     """
     Performing inference of the trained model on the testing set:
     """
-    
+    logO= logging.getSQALogger()
     if (model_name == 'KNeighborsClassifier') : 
         k = calculate_k(X_train, X_test, y_train, y_test)
         model = KNeighborsClassifier(n_neighbors = k)
@@ -81,6 +86,7 @@ def perform_inference(X_train, X_test, y_train, y_test, model_name):
         model = DecisionTreeClassifier()
     model.fit(X_train, y_train)
     pred = model.predict(X_test)
+    logO.debug('{}*{}*{}'.format('attack_model', 'perform_inference', str(pred))) 
     pred = np.round(abs(pred))
     acc = accuracy_score(y_test, pred)
     precision, recall, fscore, _ = precision_recall_fscore_support(y_test, pred, average = 'binary')

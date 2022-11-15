@@ -9,7 +9,7 @@ from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import roc_curve, auc
 from matplotlib import pyplot as plt
-
+import logging
 
 def euc_dist(x1, x2):
     return np.sqrt(np.sum((x1-x2)**2))
@@ -46,8 +46,9 @@ def prepare_data():
 #     y = mnist.target
     
     
-    
+    logO= logging.getSQALogger()
     se_data = pd.read_csv('data//IST_MIR.csv') 
+    logO.debug('{}*{}*{}'.format('knn', 'prepare_data', str(se_data.shape))) 
     print(se_data.shape)
     X = se_data.iloc[:, 2:14]
     y = se_data['defect_status']
@@ -67,12 +68,14 @@ def calculate_k(X_train, X_test, y_train, y_test):
     """
     Training our model on all possible K values (odd) from 3 to 10  
     """
+    logO= logging.getSQALogger()
     kVals = np.arange(3,10,2)
     accuracies = []
     for k in kVals:
         model = KNeighborsClassifier(n_neighbors = k)
         model.fit(X_train, y_train)
         pred = model.predict(X_test)
+        logO.debug('{}*{}*{}'.format('knn', 'calculate_k', str(pred))) 
         acc = accuracy_score(y_test, pred)
         accuracies.append(acc)
 #         print("K = "+str(k)+"; Accuracy: "+str(acc))
@@ -91,9 +94,11 @@ def calculate_metrics(k, X_train, y_train):
     """
     Checking for Precision, Recall and F-score for the most accurate K value
     """
+    logO= logging.getSQALogger()
     model = KNeighborsClassifier(n_neighbors = k)
     model.fit(X_train, y_train) 
     pred = model.predict(X_train)
+    logO.debug('{}*{}*{}'.format('knn', 'calculate_matrics', str(pred))) 
     precision, recall, fscore, _ = precision_recall_fscore_support(y_train, pred, average = 'binary')
     fpr, tpr, thresholds = roc_curve(y_train, pred)
     auc_score = auc(fpr, tpr)
@@ -109,9 +114,11 @@ def perform_inference(k, X_train, X_test, y_train, y_test):
     """
     Performing inference of the trained model on the testing set:
     """
+    logO= logging.getSQALogger()
     model = KNeighborsClassifier(n_neighbors = k)
     model.fit(X_train, y_train)
     pred = model.predict(X_test)
+    logO.debug('{}*{}*{}'.format('knn', 'perform_inference', str(pred))) 
     acc = accuracy_score(y_test, pred)
     precision, recall, fscore, _ = precision_recall_fscore_support(y_test, pred, average = 'binary')
     fpr, tpr, thresholds = roc_curve(y_test, pred)
