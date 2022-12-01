@@ -1,5 +1,5 @@
 from attack_model import calculate_k,  perform_inference
-from py_parser import getPythonParseObject, getImport, getFunctionAssignments
+from py_parser import checkAlgoNames, getImport, getFunctionAssignments
 
 def fuzz_1():
     y_test = "2"
@@ -12,8 +12,8 @@ def fuzz_2():
     print('='*100)
 
 def fuzz_3():
-    pyFile = "C:\Users\&7\Desktop\TestOrchestrator4ML-main\generation"
-    getPythonParseObject(pyFile)
+    func_list = "ﾟ･✿ヾ╲(｡◕‿◕｡)╱✿･ﾟ"
+    checkAlgoNames(func_list)
     print('='*100)
 
 def fuzz_4():

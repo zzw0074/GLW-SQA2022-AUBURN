@@ -75,8 +75,8 @@ def calculate_k(X_train, X_test, y_train, y_test):
         model = KNeighborsClassifier(n_neighbors = k)
         model.fit(X_train, y_train)
         pred = model.predict(X_test)
-        logO.debug('{}*{}*{}'.format('knn', 'calculate_k', str(pred))) 
         acc = accuracy_score(y_test, pred)
+        logO.debug('{}*{}*{}'.format('knn', 'calculate_k', str(pred))) 
         accuracies.append(acc)
 #         print("K = "+str(k)+"; Accuracy: "+str(acc))
         
